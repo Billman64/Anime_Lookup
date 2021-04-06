@@ -3,14 +3,11 @@ package com.github.billman64.acronymapp_albertsons_challenge.View
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
 import android.view.View
 import com.github.billman64.acronymapp_albertsons_challenge.Model.AcroAPI
 import com.github.billman64.acronymapp_albertsons_challenge.Model.AcroAdapter
 import com.github.billman64.acronymapp_albertsons_challenge.R
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
