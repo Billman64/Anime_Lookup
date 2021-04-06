@@ -2,5 +2,6 @@
     <string name="app_name">AcronymApp_Albertsons_challenge</string>
     <string name="acronym_hint">Enter acronym</string>
     <string name="lookup">Lookup</string>
-    <string name="net_error">Error</string>
+    <string name="net_error">Network error</string>
+    <string name="not_found">Acronym not found</string>
 </resources>

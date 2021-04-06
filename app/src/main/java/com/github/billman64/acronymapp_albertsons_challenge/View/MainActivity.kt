@@ -14,10 +14,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // UI setup
+
         error.visibility = View.GONE
-
-        acronym.setText("aaa")   // temp for dev purposes only
-
         button.setOnClickListener{
             getAcronymData()
         }
@@ -29,16 +29,14 @@ class MainActivity : AppCompatActivity() {
         bundle?.let{
             val errorCode = it.getString("error")
 
-
             error.text = errorCode
             error.visibility = View.VISIBLE
         }
-
     }
 
     private fun getAcronymData(){
 
-        if(acronym.text.isNullOrBlank()) return
+        if(acronym.text.isNullOrBlank()) return     //reject blank input
         else{
 
             // intent for list activity
