@@ -1,13 +1,15 @@
-package com.github.billman64.acronymapp_albertsons_challenge.View
+package com.github.billman64.anime_lookup.View
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.github.billman64.acronymapp_albertsons_challenge.Model.AcroAPI
-import com.github.billman64.acronymapp_albertsons_challenge.Model.AcroAdapter
-import com.github.billman64.acronymapp_albertsons_challenge.R
+import android.widget.Toast
+import com.github.billman64.anime_lookup.Model.AcroAPI
+import com.github.billman64.anime_lookup.Model.AcroAdapter
+import com.github.billman64.anime_lookup.Model.AnimeShowData
+import com.github.billman64.anime_lookup.R
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -47,7 +49,7 @@ class listActivity : AppCompatActivity() {
             // Retrofit builder
 
             val acroAPI = Retrofit.Builder()
-                    .baseUrl(" http://www.nactem.ac.uk/software/acromine/")
+                    .baseUrl("https://api.jikan.moe/v3/search/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
                     .create(AcroAPI::class.java)
@@ -63,37 +65,65 @@ class listActivity : AppCompatActivity() {
 
                     // GET data
 
-                    responseLength = acroAPI.getData(acro).awaitResponse().code().toString().length
-                    Log.d(TAG, " response length: $responseLength")
 
                     responseCode = acroAPI.getData(acro).awaitResponse().code().toString()
+                    responseLength = acroAPI.getData(acro).awaitResponse().code().toString().length
+
 
                     val response = acroAPI.getData(acro).awaitResponse()
-                    Log.d(TAG, " reponse code: ${response.code()} body: ${response.body().toString().substring(0..25)} errorBody: ${response.errorBody()}")
+                    Log.d(TAG, " reponse code: ${response.code()}")
+                    Log.d(TAG, " response length: ${response.message().length}")
+
+                    if(response.isSuccessful) Log.d(TAG, "body: ${response.body().toString().substring(0..50)}")
+                            else Log.d(TAG, "errorBody: ${response.errorBody()}")
+
 
                     // Parse data ...
 
-                    val mainJsonObj = response.body()?.get(0)?.asJsonObject
-                    Log.d(TAG, "mainJsonObj  ${mainJsonObj.toString().substring(0..50)}")
-                    val lfsJsonArray = mainJsonObj?.getAsJsonArray("lfs")
-                    Log.d(TAG, "lfsJsonArray ${lfsJsonArray.toString().subSequence(0..50)}")
+                    val resultsArray = response.body()?.getAsJsonArray("results")
+                    Log.d(TAG, "resultsArray  count: ${resultsArray?.count()}  body: ${resultsArray.toString().substring(0..100)}")
 
-                    // loop through individual longforms
-                    for(i in 0 until lfsJsonArray!!.size()){
-                        var lf = lfsJsonArray.get(i).asJsonObject.get("lf").toString()
-                        lf = lf.subSequence(1.. lf.length-2).toString()  // trims quotes
-                        Log.d(TAG, "lf: $lf")
+                    var dataList = ArrayList<AnimeShowData>()
+                    for(i in 0 until resultsArray!!.size()){
 
-                        acroList.add(lf)
-                        Log.d(TAG, lf)
+                        var animeShowData = AnimeShowData(
+                            resultsArray[i].asInt,
+                            resultsArray[i].asString,
+                            resultsArray[i].asString,
+                            resultsArray[i].asString,
+                            resultsArray[i].asBoolean,
+                            resultsArray[i].asString,
+                            resultsArray[i].asString,
+                            resultsArray[i].asInt,
+                            resultsArray[i].asDouble,
+                            resultsArray[i].asString,
+                            resultsArray[i].asString,
+                            resultsArray[i].asInt,
+                            resultsArray[i].asString
+                        )
+                        dataList.add(animeShowData)
                     }
+
+                    Log.d(TAG, " dataList  first record:  ${dataList[0].toString()}")
+
+//
+//                    // loop through individual results
+//                    for(i in 0 until lfsJsonArray!!.size()){
+//                        var lf = lfsJsonArray.get(i).asJsonObject.get("lf").toString()
+//                        lf = lf.subSequence(1.. lf.length-2).toString()  // trims quotes
+//                        Log.d(TAG, "lf: $lf")
+//
+//                        acroList.add(lf)
+//                        Log.d(TAG, lf)
+//                    }
 
                     // Update UI
 
                     withContext(Dispatchers.Main){
                         progressBar.visibility = View.GONE
-                        val acroAdapter = AcroAdapter(baseContext, acroList)
-                        listView.adapter = acroAdapter
+//                        val acroAdapter = AcroAdapter(baseContext, acroList)
+//                        listView.adapter = acroAdapter
+                        Toast.makeText(this@listActivity, dataList[0].toString().substring(0..150), Toast.LENGTH_LONG)
                     }
                     
                 } catch(e: Exception){

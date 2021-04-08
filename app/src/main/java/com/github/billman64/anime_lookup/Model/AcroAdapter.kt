@@ -1,4 +1,4 @@
-package com.github.billman64.acronymapp_albertsons_challenge.Model
+package com.github.billman64.anime_lookup.Model
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.github.billman64.acronymapp_albertsons_challenge.R
+import com.github.billman64.anime_lookup.R
 
 class AcroAdapter(private val context: Context, private val acroList:ArrayList<String>): BaseAdapter() {
     private lateinit var lf:TextView

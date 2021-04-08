@@ -8,7 +8,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.github.billman64.acronymapp_albertsons_challenge"
+        applicationId 'com.github.billman64.anime_lookup'
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

@@ -1,8 +1,6 @@
-package com.github.billman64.acronymapp_albertsons_challenge
+package com.github.billman64.anime_lookup
 
-import android.content.Context
-import com.github.billman64.acronymapp_albertsons_challenge.Model.AcroAPI
-import com.github.billman64.acronymapp_albertsons_challenge.Model.AcroAdapter
+import com.github.billman64.anime_lookup.Model.AcroAPI
 import org.junit.Test
 
 import org.junit.Assert.*

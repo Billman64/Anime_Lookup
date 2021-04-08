@@ -1,10 +1,10 @@
-package com.github.billman64.acronymapp_albertsons_challenge.View
+package com.github.billman64.anime_lookup.View
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import com.github.billman64.acronymapp_albertsons_challenge.R
+import com.github.billman64.anime_lookup.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -16,6 +16,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // UI setup
+
+        acronym.setText("naruto")
 
         error.visibility = View.GONE
         button.setOnClickListener{
