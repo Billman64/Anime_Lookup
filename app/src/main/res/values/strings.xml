@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Anime_Lookup</string>
-    <string name="acronym_hint">Enter acronym</string>
+    <string name="anime_hint">Enter anime</string>
     <string name="lookup">Lookup</string>
     <string name="net_error">Network error</string>
-    <string name="not_found">Acronym not found</string>
+    <string name="not_found">Anime not found</string>
 </resources>

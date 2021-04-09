@@ -5,14 +5,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/lf"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         xmlns:tools="http://schemas.android.com/tools"
-        tools:text="American Automobile Association"
+        tools:text="Dragon Ball Z"
+        android:padding="8dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"/>
+
+    <TextView
+        android:id="@+id/synopsis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:text="Based on an original concept by the original author Akira Toriyama, the story, set shortly after the defeat of Majin Buu, pits Son Gokuu and his friends against a new, powerful enemy. This special int..."
         android:padding="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"

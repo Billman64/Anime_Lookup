@@ -2,7 +2,8 @@ package com.github.billman64.anime_lookup
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.github.billman64.anime_lookup.Model.AcroAdapter
+import com.github.billman64.anime_lookup.Model.AnimeAdapter
+import com.github.billman64.anime_lookup.Model.AnimeShowData
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,11 +26,5 @@ class ExampleInstrumentedTest {
         assertEquals("com.github.billman64.anime_lookup", appContext.packageName)
     }
 
-    @Test
-    fun AcroAdapter_can_hold_data(){
-        val list : ArrayList<String> = arrayListOf("a", "b", "c")
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        val acroAdapter = AcroAdapter(appContext ,list)
-        assert(acroAdapter.count==3)
-    }
+
 }

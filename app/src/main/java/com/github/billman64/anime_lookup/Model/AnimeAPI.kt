@@ -5,8 +5,8 @@ import com.google.gson.JsonObject
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface AcroAPI {
+interface AnimeAPI {
 
     @GET("anime")
-    fun getData(@Query("q") acro:String):retrofit2.Call<JsonObject>
+    fun getData(@Query("q") q:String):retrofit2.Call<JsonObject>
 }

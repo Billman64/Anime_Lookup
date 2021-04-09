@@ -6,8 +6,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import com.github.billman64.anime_lookup.Model.AcroAPI
-import com.github.billman64.anime_lookup.Model.AcroAdapter
+import com.github.billman64.anime_lookup.Model.AnimeAPI
+import com.github.billman64.anime_lookup.Model.AnimeAdapter
 import com.github.billman64.anime_lookup.Model.AnimeShowData
 import com.github.billman64.anime_lookup.R
 import kotlinx.android.synthetic.main.activity_list.*
@@ -22,57 +22,56 @@ import retrofit2.converter.gson.GsonConverterFactory
 class listActivity : AppCompatActivity() {
 
     private val TAG:String = this.javaClass.simpleName + "--demo"
-    private var acro = ""
+    private var inputAnime = ""
     private var responseCode = ""
     private var responseLength = 0
-    private var acroList = ArrayList<String>()
+    private var animeList = ArrayList<AnimeShowData>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
 
-        // Call to get acronym data, assuming no savedInstanceState
-        savedInstanceState?.let{ Log.d(TAG, " onCreate() with a savedInstanceState") }?: getAcronymData()
+        // Call to get anime data, assuming no savedInstanceState
+        savedInstanceState?.let{ Log.d(TAG, " onCreate() with a savedInstanceState") }?: getAnimeData()
     }
 
-    private fun getAcronymData(){
+    private fun getAnimeData(){
 
         val bundle:Bundle? = intent.extras
         bundle?.let{
-            acro = bundle.getString("acronym").toString()
+            inputAnime = bundle.getString("anime").toString()
 
             // Set up UI
 
-            supportActionBar?.setTitle(acro)
+            supportActionBar?.setTitle(inputAnime)
             progressBar.visibility = View.VISIBLE
 
             // Retrofit builder
 
-            val acroAPI = Retrofit.Builder()
+            val animeAPI = Retrofit.Builder()
                     .baseUrl("https://api.jikan.moe/v3/search/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
-                    .create(AcroAPI::class.java)
-            // i.e: http://www.nactem.ac.uk/software/acromine/dictionary.py?sf=HMM
+                    .create(AnimeAPI::class.java)
 
             // Coroutine for network call
 
             GlobalScope.launch(Dispatchers.IO){
 
                 try{
-                    Log.v(TAG, "coroutine $acroAPI acro: $acro")
-                    Log.d(TAG, " url: ${acroAPI.getData(acro).request().url()}")
+                    Log.v(TAG, "coroutine $animeAPI anime: $inputAnime")
+                    Log.d(TAG, " url: ${animeAPI.getData(inputAnime).request().url()}")
 
                     // GET data
 
 
-                    responseCode = acroAPI.getData(acro).awaitResponse().code().toString()
-                    responseLength = acroAPI.getData(acro).awaitResponse().code().toString().length
+                    responseCode = animeAPI.getData(inputAnime).awaitResponse().code().toString()
+                    responseLength = animeAPI.getData(inputAnime).awaitResponse().code().toString().length  // may not be needed
 
 
-                    val response = acroAPI.getData(acro).awaitResponse()
+                    val response = animeAPI.getData(inputAnime).awaitResponse()
                     Log.d(TAG, " reponse code: ${response.code()}")
-                    Log.d(TAG, " response length: ${response.message().length}")
+//                    Log.d(TAG, " response length: ${response.message().length}")
 
                     if(response.isSuccessful) Log.d(TAG, "body: ${response.body().toString().substring(0..50)}")
                             else Log.d(TAG, "errorBody: ${response.errorBody()}")
@@ -81,54 +80,60 @@ class listActivity : AppCompatActivity() {
                     // Parse data ...
 
                     val resultsArray = response.body()?.getAsJsonArray("results")
-                    Log.d(TAG, "resultsArray  count: ${resultsArray?.count()}  body: ${resultsArray.toString().substring(0..100)}")
+                    Log.d(TAG, "resultsArray  count: ${resultsArray?.count()}  body: ${resultsArray.toString().substring(0..20)}")
 
-                    var dataList = ArrayList<AnimeShowData>()
                     for(i in 0 until resultsArray!!.size()){
 
+                        var r = resultsArray[i].asJsonObject // Refactored for code readability
+
+                        Log.v(TAG, "r  title: ${r.get("title").toString().substring(0..10)} id: ${r.get("mal_id")}")
+
                         var animeShowData = AnimeShowData(
-                            resultsArray[i].asInt,
-                            resultsArray[i].asString,
-                            resultsArray[i].asString,
-                            resultsArray[i].asString,
-                            resultsArray[i].asBoolean,
-                            resultsArray[i].asString,
-                            resultsArray[i].asString,
-                            resultsArray[i].asInt,
-                            resultsArray[i].asDouble,
-                            resultsArray[i].asString,
-                            resultsArray[i].asString,
-                            resultsArray[i].asInt,
-                            resultsArray[i].asString
+                                r.get("mal_id").asInt,
+                                r.get("url").asString.toString(),   // trim quotes off of Json strings
+                                r.get("image_url").asString.toString(),
+                                r.get("title").asString.toString(),
+                                r.get("airing").asBoolean,
+                                r.get("synopsis").asString.toString(),
+                                r.get("type").asString.toString(),
+                                r.get("episodes").asInt,
+                                r.get("score").asDouble,
+                                r.get("start_date").asString.toString(),
+//                                r.get("end_date").asString.toString(),    //TODO: null handling for end_date
+                                "endDate placeholder for null bug",
+                                r.get("members").asInt,
+                                r.get("rated").asString.toString()
                         )
-                        dataList.add(animeShowData)
+                        //TODO: trim quotes
+                            //  .subSequence(1.. r.get("rated").asString.length-2).toString()  quote-trimming like this can't be universally applied. ie: rating:"G"
+
+
+//                        )
+                        animeList.add(animeShowData)
+                        Log.v(TAG, "i: $i  title: ${r.get("title")}")
                     }
 
-                    Log.d(TAG, " dataList  first record:  ${dataList[0].toString()}")
+                    Log.v(TAG, " dataList  last record:  ${animeList.get(it.size()-1)}")
 
-//
-//                    // loop through individual results
-//                    for(i in 0 until lfsJsonArray!!.size()){
-//                        var lf = lfsJsonArray.get(i).asJsonObject.get("lf").toString()
-//                        lf = lf.subSequence(1.. lf.length-2).toString()  // trims quotes
-//                        Log.d(TAG, "lf: $lf")
-//
-//                        acroList.add(lf)
-//                        Log.d(TAG, lf)
-//                    }
 
                     // Update UI
 
                     withContext(Dispatchers.Main){
                         progressBar.visibility = View.GONE
-//                        val acroAdapter = AcroAdapter(baseContext, acroList)
-//                        listView.adapter = acroAdapter
-                        Toast.makeText(this@listActivity, dataList[0].toString().substring(0..150), Toast.LENGTH_LONG)
+                        Log.d(TAG, "")  // log spacer
+                        Log.d(TAG, "Main dispacher. animeList size: ${animeList.size}")
+                        Log.v(TAG, "rv child count (before): ${recyclerView.childCount}")
+
+                        val animeAdapter = AnimeAdapter(animeList)
+                        recyclerView.adapter = animeAdapter
+                        Log.d(TAG, "rv child count: ${recyclerView.childCount}")
+//                        Toast.makeText(this@listActivity, animeList[0].toString().substring(0..150), Toast.LENGTH_LONG)
+                        Toast.makeText(applicationContext,"asdf",Toast.LENGTH_SHORT)
                     }
                     
                 } catch(e: Exception){
-                    Log.e(TAG," Error. message: ${e.message} printStackTrace: ${e.printStackTrace()}")
-                    Log.v(TAG, " response code: $responseCode length: $responseLength")
+                    Log.e(TAG," Error. message: ${e.message}")
+                    Log.v(TAG, " response code: $responseCode")
 
                     withContext(Dispatchers.Main){
                         progressBar.visibility = View.GONE
@@ -136,7 +141,7 @@ class listActivity : AppCompatActivity() {
 
                     val i = Intent(applicationContext, MainActivity::class.java)
 
-                    if(responseLength==3) responseCode = "${getString(R.string.not_found)}: $acro"     // API returns "[]" if acronym not in its database
+                    if(responseCode == "404") responseCode = "${getString(R.string.not_found)}: $inputAnime"     // If not found in API, it returns '{"status":404,"type":"BadResponseException","'
                     if(responseCode.isBlank()) responseCode = getString(R.string.net_error)     // fallback generic error
 
                     i.putExtra("error", responseCode)
@@ -150,21 +155,21 @@ class listActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
-        outState.putString("acro", acro)  // save input acronym
-        if(acroList.count()>0) outState.putStringArrayList("acroList", acroList)    // save list of found longforms
-        Log.d(TAG, "onSaveInstanceState() acroList count: ${outState.getStringArrayList("acroList")?.count()}")
+        outState.putString("anime", inputAnime)  // save input anime
+//        if(animeList.count()>0) outState.putParcelableArrayList ("animeList", animeList)    // save list of found anime search results
+        Log.d(TAG, "onSaveInstanceState() animeList count: ${outState.getStringArrayList("animeList")?.count()}")
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
 
-        acro = savedInstanceState.getString("acro")?:""
-        supportActionBar?.setTitle(acro)
+        inputAnime = savedInstanceState.getString("anime")?:""
+        supportActionBar?.setTitle(inputAnime)
 
-        acroList = savedInstanceState.getStringArrayList("acroList") as ArrayList<String>
-        val restoreAdapter = AcroAdapter(applicationContext, acroList)
-        listView.adapter = restoreAdapter
+        animeList = savedInstanceState.getStringArrayList("animeList") as ArrayList<AnimeShowData>
+        val restoreAdapter = AnimeAdapter(animeList)
+        recyclerView.adapter = restoreAdapter
 
-        Log.d(TAG, "onRestoreInstanceState() acroList count: ${acroList.count()}")
+        Log.d(TAG, "onRestoreInstanceState() animeList count: ${animeList.count()}")
     }
 }

@@ -1,6 +1,8 @@
 package com.github.billman64.anime_lookup
 
-import com.github.billman64.anime_lookup.Model.AcroAPI
+import com.github.billman64.anime_lookup.Model.AnimeAPI
+import com.github.billman64.anime_lookup.Model.AnimeAdapter
+import com.github.billman64.anime_lookup.Model.AnimeShowData
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -22,24 +24,47 @@ class ExampleUnitTest {
 
     @Test
     fun api_url_isCorrect(){
-        val acroAPI = Retrofit.Builder()
-            .baseUrl(" http://www.nactem.ac.uk/software/acromine/")
+        val animeAPI = Retrofit.Builder()
+            .baseUrl("https://api.jikan.moe/v3/search/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(AcroAPI::class.java)
+            .create(AnimeAPI::class.java)
 
-        val url = acroAPI.getData("aa").request().url()
-        assertEquals(url.toString(), "http://www.nactem.ac.uk/software/acromine/dictionary.py?sf=aa")
+        val url = animeAPI.getData("naruto").request().url()
+        assertEquals(url.toString(), "https://api.jikan.moe/v3/search/anime?q=naruto")
     }
 
     @Test
-    fun AcroAPI_method_is_get(){
-        val acroAPI = Retrofit.Builder()
-            .baseUrl(" http://www.nactem.ac.uk/software/acromine/")
+    fun AnimeAPI_method_is_get(){
+        val animeAPI = Retrofit.Builder()
+            .baseUrl("https://api.jikan.moe/v3/search/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(AcroAPI::class.java)
+            .create(AnimeAPI::class.java)
 
-        assertEquals(acroAPI.getData("x").request().method(),"GET")
+        assertEquals(animeAPI.getData("x").request().method(),"GET")
+    }
+
+    @Test
+    fun AnimeAdapter_can_hold_data(){
+        val list : ArrayList<AnimeShowData> = arrayListOf(AnimeShowData(123,
+                "https://myanimelist.net",
+                "https://cdn.myanimelist.net/images/anime/12/82828.jpg?s=98fde86014a4379263b182edaf19ee32",
+                "Dragon Ball: Ossu! Kaettekita Son Gokuu to Nakama-tachi!!",
+                false,
+                "Stuff happens",
+                "special",
+                1,
+                1.23,
+                "2008-09-21T00:00:00+00:00",
+                "2008-09-21T00:00:00+00:00",
+                12345,
+                "PG-13"
+        )
+        )
+
+
+        val animeAdapter = AnimeAdapter(list)
+        assert(animeAdapter.itemCount==1)
     }
 }

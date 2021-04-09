@@ -17,11 +17,11 @@ class MainActivity : AppCompatActivity() {
 
         // UI setup
 
-        acronym.setText("naruto")
+        acronym.setText("dragon ball z")
 
         error.visibility = View.GONE
         button.setOnClickListener{
-            getAcronymData()
+            getAnimeData()
         }
 
 
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAcronymData(){
+    private fun getAnimeData(){
 
         if(acronym.text.isNullOrBlank()) return     //reject blank input
         else{
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             val i = Intent(this, listActivity::class.java)
             val acro = acronym.text.toString().trim()
 
-            i.putExtra("acronym", acro)
+            i.putExtra("anime", acro)
             startActivity(i)
         }
     }
