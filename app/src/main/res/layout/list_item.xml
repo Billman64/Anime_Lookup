@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:id="@+id/itemLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         xmlns:tools="http://schemas.android.com/tools"
         tools:text="Dragon Ball Z"
         android:padding="8dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp"/>
+        android:paddingRight="16dp"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
 
     <TextView
         android:id="@+id/synopsis"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         xmlns:tools="http://schemas.android.com/tools"
         tools:text="Based on an original concept by the original author Akira Toriyama, the story, set shortly after the defeat of Majin Buu, pits Son Gokuu and his friends against a new, powerful enemy. This special int..."
         android:padding="8dp"
-        android:paddingStart="16dp"
+        android:paddingStart="32dp"
         android:paddingEnd="16dp"
-        android:paddingLeft="16dp"
+        android:paddingLeft="32dp"
         android:paddingRight="16dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/rated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools"
+        tools:text="Based on an original concept by the original author Akira Toriyama, the story, set shortly after the defeat of Majin Buu, pits Son Gokuu and his friends against a new, powerful enemy. This special int..."
+        android:padding="8dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="16dp"
+        android:paddingLeft="32dp"
+        android:paddingRight="16dp"/>
+
+
+
+</LinearLayout>

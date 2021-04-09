@@ -6,10 +6,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.get
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.github.billman64.anime_lookup.Model.AnimeAPI
 import com.github.billman64.anime_lookup.Model.AnimeAdapter
 import com.github.billman64.anime_lookup.Model.AnimeShowData
+import com.github.billman64.anime_lookup.Model.StringAdapter
 import com.github.billman64.anime_lookup.R
+import com.google.gson.JsonNull
+import com.google.gson.JsonObject
 import kotlinx.android.synthetic.main.activity_list.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -83,10 +90,17 @@ class listActivity : AppCompatActivity() {
                     Log.d(TAG, "resultsArray  count: ${resultsArray?.count()}  body: ${resultsArray.toString().substring(0..20)}")
 
                     for(i in 0 until resultsArray!!.size()){
+                        Log.d(TAG, "i = $i  ")
 
-                        var r = resultsArray[i].asJsonObject // Refactored for code readability
+                        var r = resultsArray[i].asJsonObject // Refactored for code readability //TODO: error here on Naruto, Pokemon the first movie, many other anime. cause: ";" in data?
 
                         Log.v(TAG, "r  title: ${r.get("title").toString().substring(0..10)} id: ${r.get("mal_id")}")
+
+
+//                        var endDate = r.get("end_date").toString()
+//                        Log.d(TAG, "endDateR $endDate")
+
+//                        if(endDate.equals(JsonNull.INSTANCE.toString())) endDate = JsonObject().
 
                         var animeShowData = AnimeShowData(
                                 r.get("mal_id").asInt,
@@ -95,14 +109,15 @@ class listActivity : AppCompatActivity() {
                                 r.get("title").asString.toString(),
                                 r.get("airing").asBoolean,
                                 r.get("synopsis").asString.toString(),
+//                                "placeholder for synopsis",
                                 r.get("type").asString.toString(),
                                 r.get("episodes").asInt,
                                 r.get("score").asDouble,
                                 r.get("start_date").asString.toString(),
-//                                r.get("end_date").asString.toString(),    //TODO: null handling for end_date
-                                "endDate placeholder for null bug",
+                                "placeHolder", //endDate,    // jsonNull handling needed for end_date
+//                                "endDate placeholder for null bug",
                                 r.get("members").asInt,
-                                r.get("rated").asString.toString()
+                                r.get("rated").asString.toString()      //TODO: quote trimming for "G"?
                         )
                         //TODO: trim quotes
                             //  .subSequence(1.. r.get("rated").asString.length-2).toString()  quote-trimming like this can't be universally applied. ie: rating:"G"
@@ -124,11 +139,46 @@ class listActivity : AppCompatActivity() {
                         Log.d(TAG, "Main dispacher. animeList size: ${animeList.size}")
                         Log.v(TAG, "rv child count (before): ${recyclerView.childCount}")
 
+                        recyclerView.layoutManager = LinearLayoutManager(baseContext)
                         val animeAdapter = AnimeAdapter(animeList)
                         recyclerView.adapter = animeAdapter
-                        Log.d(TAG, "rv child count: ${recyclerView.childCount}")
+
+                        Log.d(TAG, "animeAdapter count: ${animeAdapter.itemCount}")
+
+
+                        // mock test 2 - string adapter
+
+
+//                        val stringList = ArrayList<String>()
+//                        stringList.add("aaa")
+//                        stringList.add("bb")
+//                        stringList.add("cccc")
+//
+//                        val stringAdapter = StringAdapter(stringList)
+//                        Log.d(TAG, "stringAdapter  count: ${stringAdapter.itemCount}")
+
+//                        recyclerView.adapter = stringAdapter
+//                        Log.d(TAG, "stringAdapter applied. childCount:  ${recyclerView.childCount}")
+//                        Log.d(TAG, " recyclerView layout: ${recyclerView.layoutManager.toString()}")
+
+
+
+//                        // mock data
+//                        val a = AnimeShowData(1,"a","b","c",false,"d","e",1,1.23,"f","g",1,"PG-13")
+//                        animeList.clear()
+//                        animeList.add(a)
+//                        Log.d(TAG, "mock animeList count: ${animeList.count()}")
+//
+//                        val rv = findViewById<RecyclerView>(R.id.recyclerView)
+//
+//                        rv.adapter = AnimeAdapter(animeList)
+//
+//                        rv.isActivated = true
+//                        Log.d(TAG, "recyclerView activated: ${recyclerView.isActivated}  rv activated: ${rv.isActivated}")
+//                        Log.d(TAG, "recyclerView enabled: ${recyclerView.isEnabled}  rv activated: ${rv.isEnabled}")
+//                        Log.d(TAG, "rv child count: ${recyclerView.childCount}")
 //                        Toast.makeText(this@listActivity, animeList[0].toString().substring(0..150), Toast.LENGTH_LONG)
-                        Toast.makeText(applicationContext,"asdf",Toast.LENGTH_SHORT)
+                        Toast.makeText(baseContext,"asdf",Toast.LENGTH_SHORT)
                     }
                     
                 } catch(e: Exception){

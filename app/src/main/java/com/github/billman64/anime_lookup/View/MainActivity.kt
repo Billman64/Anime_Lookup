@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
         // UI setup
 
-        acronym.setText("dragon ball z")
+        anime.setText("naruto")
 
         error.visibility = View.GONE
         button.setOnClickListener{
@@ -38,14 +38,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun getAnimeData(){
 
-        if(acronym.text.isNullOrBlank()) return     //reject blank input
+        if(anime.text.isNullOrBlank()) return     //reject blank input
         else{
 
             // intent for list activity
             val i = Intent(this, listActivity::class.java)
-            val acro = acronym.text.toString().trim()
+            val animeInput = anime.text.toString().trim()
 
-            i.putExtra("anime", acro)
+            i.putExtra("anime", animeInput)
             startActivity(i)
         }
     }
